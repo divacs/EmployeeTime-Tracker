@@ -1,0 +1,21 @@
+﻿@model List<EmployeeTimeTracker.Models.EmployeeModel>
+
+<table class="table table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Total time worked</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var employee in Model)
+        {
+            string backgroundColor = employee.TotalWorkedHours < 100 ? "background-color: rgba(255, 0, 0, 0.5);" : "";
+
+            <tr style="@backgroundColor">
+                <td>@employee.EmployeeName</td>
+                <td>@employee.TotalWorkedHours.ToString("F2")</td>
+            </tr>
+        }
+    </tbody>
+</table>
