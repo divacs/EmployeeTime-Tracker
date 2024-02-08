@@ -20,7 +20,7 @@ namespace EmployeeTimeTracker.Controllers
             _configuration = configuration; // Dependency injection of IHttpClientFactory and IConfiguration
         }
 
-        // Action method to retrieve employee data
+        // Action method to retrieve employee data  
         public async Task<IActionResult> Employee()
         {
             // Getting API URL and API key from appsettings.json
