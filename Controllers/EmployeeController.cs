@@ -14,7 +14,7 @@ namespace EmployeeTimeTracker.Controllers
         private readonly IHttpClientFactory _clientFactory;
         private readonly IConfiguration _configuration; // Added for configuration
 
-        public EmployeeController(IHttpClientFactory clientFactory, IConfiguration configuration)
+        public EmployeeController(IHttpClientFactory clientFactory, IConfiguration configuration) 
         {
             _clientFactory = clientFactory;
             _configuration = configuration; // Dependency injection of IHttpClientFactory and IConfiguration

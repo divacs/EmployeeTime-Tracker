@@ -6,4 +6,4 @@ namespace EmployeeTimeTracker.Models
 
         public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
     }
-}
+} 
