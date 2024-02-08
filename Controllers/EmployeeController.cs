@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration; // Added for configuration
 using EmployeeTimeTracker.Models;
+using System.Drawing.Imaging;
+using System.Drawing;
 
 namespace EmployeeTimeTracker.Controllers
 {
@@ -53,7 +55,11 @@ namespace EmployeeTimeTracker.Controllers
                             .ToList();
 
                         // Returning the grouped and sorted employee data to the view
-                        return View(groupedEmployees);
+                        // Generate pie chart
+                        var image = GeneratePieChart(groupedEmployees);
+
+                        // Return the image as a response
+                        return File(image, "image/png");
                     }
                     else
                     {
@@ -68,5 +74,53 @@ namespace EmployeeTimeTracker.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        // Method to generate pie chart
+        private byte[] GeneratePieChart(List<EmployeeModel> employees)
+        {
+            // Create a new bitmap
+            var bitmap = new Bitmap(400, 400);
+
+            // Create graphics object from bitmap
+            using (var graphics = Graphics.FromImage(bitmap))
+            {
+                // Clear the graphics surface
+                graphics.Clear(Color.White);
+
+                // Define colors for pie slices
+                Color[] colors = { Color.Red, Color.Green, Color.Blue, Color.Yellow, Color.Orange, Color.Purple, Color.Gray, Color.Pink, Color.Brown };
+
+                // Calculate total worked hours
+                double totalHours = employees.Sum(e => e.TotalWorkedHours);
+
+                // Initialize start angle for pie chart slices
+                float startAngle = 0;
+
+                // Iterate over employees to draw pie chart slices
+                for (int i = 0; i < employees.Count; i++)
+                {
+                    // Calculate angle for current slice based on its proportion of total hours
+                    float sweepAngle = (float)(360 * employees[i].TotalWorkedHours / totalHours);
+
+                    // Define brush for current slice
+                    using (var brush = new SolidBrush(colors[i % colors.Length]))
+                    {
+                        // Draw pie chart slice
+                        graphics.FillPie(brush, new Rectangle(0, 0, 400, 400), startAngle, sweepAngle);
+                    }
+
+                    // Update start angle for next slice
+                    startAngle += sweepAngle;
+                }
+            }
+
+            // Convert bitmap to byte array (PNG format)
+            using (var stream = new MemoryStream())
+            {
+                bitmap.Save(stream, ImageFormat.Png);
+                return stream.ToArray();
+            }
+        }
+
     }
 }
